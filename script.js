@@ -1,4 +1,9 @@
 // ============================================================
+//  KONFIGURASI TUJUAN PESAN (GMAIL JIDAN)
+// ============================================================
+const TARGET_EMAIL = "sajidanmuhammad56@gmail.com";
+
+// ============================================================
 //  MESSAGES (8 Halaman Surat - Mempertahankan Emoji Teks Asli)
 // ============================================================
 const messages = [
@@ -462,19 +467,26 @@ function triggerCourierArrival() {
 }
 
 // ============================================================
-//  FEEDBACK SUBMISSION
+//  FEEDBACK SUBMISSION (LANGSUNG TERKIRIM KE GMAIL JIDAN)
 // ============================================================
-function handleSendFeedback(e) {
+async function handleSendFeedback(e) {
   e.preventDefault();
   const textarea = document.getElementById('feedbackText');
   const successBox = document.getElementById('feedbackSuccess');
   const form = document.getElementById('feedbackForm');
+  const sendBtn = document.getElementById('sendBtn');
 
   if (!textarea) return;
   const content = textarea.value.trim();
   if (!content) return;
 
-  // Save to localStorage
+  // Ubah status tombol saat mengirim
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = `<span>Sedang Mengirimkan...</span>`;
+  }
+
+  // Backup simpan di browser
   try {
     const stored = JSON.parse(localStorage.getItem('jidan_unek_unek') || '[]');
     stored.push({
@@ -486,30 +498,31 @@ function handleSendFeedback(e) {
     console.log(err);
   }
 
-  // Hide form, show warm confirmation
+  // Kirim langsung ke Gmail Jidan via FormSubmit
+  try {
+    await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        _subject: "Unek-Unek Khusus Buat Jidan (Dari Website Surat)",
+        _template: "table",
+        _captcha: "false",
+        "Pesan Unek-Unek": content,
+        "Waktu Kirim": new Date().toLocaleString("id-ID")
+      })
+    });
+  } catch (err) {
+    console.log("Kirim email latar belakang:", err);
+  }
+
+  // Tampilkan konfirmasi sukses yang hangat di halaman
   if (form) form.style.display = 'none';
   if (successBox) successBox.classList.add('show');
 
-  showToast('Terima kasih banyak sudah mau berbagi cerita');
-
-  // Add optional direct WhatsApp action button for convenience
-  const actions = document.createElement('div');
-  actions.style.marginTop = '18px';
-  actions.style.display = 'flex';
-  actions.style.justifyContent = 'center';
-  actions.style.gap = '10px';
-
-  const waBtn = document.createElement('a');
-  waBtn.href = `https://wa.me/?text=${encodeURIComponent('Hai Jidan, ini unek-unek dari aku: ' + content)}`;
-  waBtn.target = '_blank';
-  waBtn.rel = 'noopener noreferrer';
-  waBtn.className = 'submit-feedback-btn';
-  waBtn.style.textDecoration = 'none';
-  waBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-  waBtn.textContent = 'Kirim juga ke WhatsApp Jidan';
-
-  actions.appendChild(waBtn);
-  successBox.appendChild(actions);
+  showToast('Ceritamu sudah tersampaikan ke Jidan, makasih ya');
 }
 
 // ============================================================
