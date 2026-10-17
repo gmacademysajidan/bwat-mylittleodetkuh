@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initDots();
   initSlider();
   initSwipeGesture();
+  initMiniGame();
 });
 
 // ============================================================
@@ -543,4 +544,99 @@ function showToast(msg) {
   toastTimer = setTimeout(() => {
     toast.classList.remove('show');
   }, 4000);
+}
+
+// ============================================================
+//  MINI GAME INTERACTION (RUNAWAY BUTTON & CLAIM COUPON)
+// ============================================================
+function initMiniGame() {
+  const btnNo = document.getElementById('btnForgiveNo');
+  const btnYes = document.getElementById('btnForgiveYes');
+  const rewardArea = document.getElementById('rewardArea');
+  const buttonsArea = document.getElementById('gameButtonsArea');
+
+  if (!btnNo || !btnYes) return;
+
+  const teasingTexts = [
+    "Engga Dulu",
+    "Eitss, meleset :p",
+    "Yakin gamau maafin?",
+    "Tombolnya licin nih...",
+    "Gabisa dipencet lohh",
+    "Tuh kan kabur lagi",
+    "Pencet yang hijau aja hehe"
+  ];
+  let textIndex = 0;
+  let moveCount = 0;
+
+  function moveButton(e) {
+    if (e && e.cancelable) e.preventDefault();
+    moveCount++;
+
+    // Hitung posisi acak di dalam batas container
+    const areaRect = buttonsArea.getBoundingClientRect();
+    const btnRect = btnNo.getBoundingClientRect();
+
+    const maxX = (areaRect.width / 2) - (btnRect.width / 2) - 10;
+    const maxY = 35;
+
+    // Gerak acak kiri/kanan dan atas/bawah
+    const randomX = (Math.random() * (maxX * 2)) - maxX;
+    const randomY = (Math.random() * (maxY * 2)) - maxY;
+
+    btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+    // Ganti teks secara berurutan
+    textIndex = (textIndex + 1) % teasingTexts.length;
+    btnNo.querySelector('span').textContent = teasingTexts[textIndex];
+
+    // Buat tombol "Iya, Dimaafin" sedikit membesar setiap kali tombol "Engga" dicoba diklik
+    const currentScale = Math.min(1.35, 1 + (moveCount * 0.05));
+    btnYes.style.transform = `scale(${currentScale})`;
+  }
+
+  // Kompatibel untuk mouse hover & touch di HP
+  btnNo.addEventListener('mouseenter', moveButton);
+  btnNo.addEventListener('touchstart', moveButton, { passive: false });
+  btnNo.addEventListener('click', moveButton);
+
+  // Klik tombol "Iya, Dimaafin"
+  btnYes.addEventListener('click', () => {
+    btnNo.style.display = 'none';
+    btnYes.style.transform = 'scale(1)';
+    btnYes.disabled = true;
+    btnYes.querySelector('span').textContent = 'Sudah Dimaafin';
+
+    if (rewardArea) {
+      rewardArea.classList.add('show');
+      rewardArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    showToast('Makasih banyak ya sudah mau maafin temenmu ini');
+  });
+}
+
+// Klaim Kupon Kompensasi
+let claimedAny = false;
+function claimCoupon(title, element) {
+  if (claimedAny && element.classList.contains('claimed')) return;
+
+  // Hapus tanda claimed dari kupon lain
+  document.querySelectorAll('.coupon-item').forEach(c => c.classList.remove('claimed'));
+
+  // Beri stempel klaim ke kupon yang dipilih
+  element.classList.add('claimed');
+  claimedAny = true;
+
+  const statusEl = document.getElementById('couponStatus');
+  if (statusEl) {
+    statusEl.innerHTML = `Selamat! Kamu berhasil klaim <b>${title}</b>. Screenshot halaman ini ya buat ditagih ke Jidan`;
+  }
+
+  showToast(`Kupon berhasil diklaim: ${title}`);
+
+  // Simpan kupon yang diklaim di localStorage
+  try {
+    localStorage.setItem('jidan_claimed_coupon', title);
+  } catch (_) {}
 }

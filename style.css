@@ -1004,6 +1004,269 @@ body {
 }
 
 /* ============================================================
+   MINI GAME: MAAFIN JIDAN & KUPON KOMPENSASI
+   ============================================================ */
+.game-section {
+  margin-top: 32px;
+  animation: section-fade-up 0.8s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+
+.game-card {
+  background: linear-gradient(160deg, #fffdf8 0%, #fdf6ec 50%, #faecd8 100%);
+  border-radius: 14px;
+  padding: 32px 28px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(200, 150, 100, .1);
+  border: 1.5px solid var(--gold);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), var(--warm));
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.game-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 27px;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.game-desc {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  color: var(--ink2);
+  margin-bottom: 24px;
+}
+
+/* Playful Buttons Container */
+.game-buttons-area {
+  position: relative;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.game-btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(.34, 1.56, .64, 1);
+  user-select: none;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  z-index: 2;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+}
+
+.btn-yes:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55);
+}
+
+.btn-no {
+  background: linear-gradient(135deg, #71717a, #52525b);
+  color: #f4f4f5;
+  position: relative;
+  transition: all 0.15s ease-out;
+  white-space: nowrap;
+}
+
+/* Reward Coupons Area */
+.reward-area {
+  display: none;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px dashed rgba(139, 94, 60, 0.35);
+  animation: reward-slide 0.6s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+
+.reward-area.show {
+  display: block;
+}
+
+@keyframes reward-slide {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reward-header {
+  margin-bottom: 22px;
+}
+
+.reward-star-icon {
+  margin-bottom: 8px;
+  animation: star-bounce 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes star-bounce {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-4px) scale(1.1); }
+}
+
+.reward-header h4 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 30px;
+  color: var(--warmdk);
+  margin-bottom: 4px;
+}
+
+.reward-header p {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink2);
+}
+
+/* Coupon Tickets Grid */
+.coupons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.coupon-item {
+  position: relative;
+  background: #fffdfa;
+  border: 1.5px dashed var(--warm);
+  border-radius: 8px;
+  padding: 20px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.34, 1.56, .64, 1);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(90, 58, 40, 0.08);
+}
+
+.coupon-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 20px rgba(212, 168, 67, 0.25);
+}
+
+.coupon-type {
+  font-family: 'Nunito', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--warmdk);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.coupon-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.coupon-desc {
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  color: var(--ink2);
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+
+.claim-btn {
+  background: linear-gradient(135deg, var(--warm), var(--warmdk));
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: none;
+  transition: background 0.2s;
+}
+
+/* Coupon Claimed Stamp */
+.coupon-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg) scale(0);
+  border: 3px solid #b03a2e;
+  color: #b03a2e;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  padding: 4px 16px;
+  border-radius: 4px;
+  letter-spacing: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(.34, 1.56, .64, 1);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.coupon-item.claimed {
+  border-color: #b03a2e;
+  border-style: solid;
+  background: #fff8f8;
+}
+
+.coupon-item.claimed .coupon-stamp {
+  transform: translate(-50%, -50%) rotate(-15deg) scale(1);
+  opacity: 1;
+}
+
+.coupon-item.claimed .claim-btn {
+  background: #10b981;
+}
+
+.coupon-status {
+  margin-top: 18px;
+  font-family: 'Caveat', cursive;
+  font-size: 21px;
+  color: var(--warmdk);
+  min-height: 28px;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .coupons-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* ============================================================
    FOOTER
    ============================================================ */
 .letter-footer {
