@@ -96,11 +96,12 @@
             </div>
           </div>
           <div class="stamp-area">
-            <div class="stamp">
+            <button class="stamp stamp-secret-btn" id="secretStampBtn" type="button" title="???" aria-label="Easter egg rahasia">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="#8b5e3c">
                 <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
               </svg>
-            </div>
+              <span class="secret-glow-hint"></span>
+            </button>
           </div>
         </div>
 
@@ -132,7 +133,14 @@
           <div class="sign-line-wrap">
             <div class="sign-line"></div>
           </div>
-          <p class="sign-name">Jidan</p>
+          <div class="sign-footer-row">
+            <p class="sign-name">Jidan</p>
+            <button class="secret-clover-btn" id="secretHeartBtn" type="button" title="Psst..." aria-label="Tombol rahasia">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Corner vintage borders -->
@@ -343,6 +351,40 @@
 
     </div><!-- /letter-wrapper -->
   </div><!-- /letter-page -->
+
+  <!-- Secret Letter Modal (Easter Egg) -->
+  <div class="secret-modal-overlay" id="secretModalOverlay" aria-hidden="true">
+    <div class="secret-modal-card" role="dialog" aria-labelledby="secretLetterTitle">
+      <div class="secret-modal-header">
+        <div class="secret-badge">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span>Surat Rahasia</span>
+        </div>
+        <button class="secret-modal-close" id="secretModalClose" type="button" aria-label="Tutup surat rahasia">&times;</button>
+      </div>
+
+      <div class="secret-letter-paper">
+        <div class="secret-paper-decor"></div>
+        <h3 class="secret-letter-title" id="secretLetterTitle">Psst... ini rahasia kecil</h3>
+        <div class="secret-letter-body">
+          <p class="secret-message-text">
+            &ldquo;tidak salah nya kan aku menyukaimu... , jika kamu memang ada rasa risih kamu bisa cerita koo.. , lupakan juga isi surat ini yaa kalo memang kamu menemukan nya .. aku cuman tidak mau hubungan yang katanya &quot;bestai&quot; itu hilang... ntar siapa lagi yang bisa aku godain waktu main ml lagi 😋🗿&rdquo;
+          </p>
+        </div>
+        <div class="secret-letter-footer">
+          <span class="secret-sign">&mdash; Dari seseorang yang selalu ada buat mabar</span>
+        </div>
+      </div>
+
+      <div class="secret-modal-action">
+        <button class="secret-close-btn" id="secretCloseBtn" type="button">
+          Simpan Rahasia Ini & Tutup
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

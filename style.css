@@ -1342,3 +1342,220 @@ body {
     right: 12px;
   }
 }
+
+/* ============================================================
+   EASTER EGG & SECRET LETTER MODAL
+   ============================================================ */
+.stamp-secret-btn {
+  background: rgba(253, 246, 236, 0.85);
+  cursor: pointer;
+  border: 2px dashed rgba(139, 94, 60, .55);
+  position: relative;
+  outline: none;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.stamp-secret-btn:hover {
+  transform: rotate(6deg) scale(1.08);
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.45);
+}
+
+.stamp-secret-btn:active {
+  transform: scale(0.95);
+}
+
+.secret-glow-hint {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--rosedp);
+  box-shadow: 0 0 8px var(--rosedp);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+
+.sign-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.secret-clover-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  color: rgba(192, 98, 122, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.secret-clover-btn:hover {
+  color: var(--rosedp);
+  transform: scale(1.25) rotate(12deg);
+  background: rgba(232, 160, 160, 0.2);
+  filter: drop-shadow(0 0 6px rgba(192, 98, 122, 0.6));
+}
+
+/* Modal Overlay */
+.secret-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 6, 18, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.secret-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal Card */
+.secret-modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(170deg, #fffcf7 0%, #faecd8 100%);
+  border: 2px solid var(--gold);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(212, 168, 67, 0.25);
+  padding: 26px 26px 22px;
+  transform: scale(0.85) translateY(20px);
+  transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.secret-modal-overlay.active .secret-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.secret-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.secret-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(192, 98, 122, 0.15), rgba(212, 168, 67, 0.2));
+  border: 1px solid rgba(192, 98, 122, 0.4);
+  padding: 5px 13px;
+  border-radius: 20px;
+  color: var(--rosedp);
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.secret-modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--ink2);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 6px;
+  border-radius: 6px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.secret-modal-close:hover {
+  color: var(--rosedp);
+  transform: scale(1.15);
+}
+
+/* Secret Paper Box */
+.secret-letter-paper {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed rgba(200, 149, 108, 0.6);
+  border-radius: 14px;
+  padding: 22px 20px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(240, 220, 190, 0.25);
+}
+
+.secret-paper-decor {
+  width: 40px;
+  height: 2px;
+  background: var(--gold);
+  margin-bottom: 12px;
+  border-radius: 2px;
+}
+
+.secret-letter-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 24px;
+  color: var(--warm);
+  margin-bottom: 12px;
+}
+
+.secret-message-text {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  line-height: 1.7;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.secret-letter-footer {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.secret-sign {
+  font-family: 'Dancing Script', cursive;
+  font-size: 18px;
+  color: var(--ink2);
+}
+
+.secret-modal-action {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.secret-close-btn {
+  background: linear-gradient(135deg, var(--gold), var(--warm));
+  color: #fff;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(212, 168, 67, 0.35);
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease;
+}
+
+.secret-close-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+}
+
+.secret-close-btn:active {
+  transform: scale(0.96);
+}
+

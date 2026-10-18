@@ -56,6 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initSlider();
   initSwipeGesture();
   initMiniGame();
+  initEasterEgg();
 });
 
 // ============================================================
@@ -639,4 +640,61 @@ function claimCoupon(title, element) {
   try {
     localStorage.setItem('jidan_claimed_coupon', title);
   } catch (_) {}
+}
+
+// ============================================================
+//  EASTER EGG (SURAT RAHASIA)
+// ============================================================
+function initEasterEgg() {
+  const secretStampBtn = document.getElementById('secretStampBtn');
+  const secretHeartBtn = document.getElementById('secretHeartBtn');
+  const secretModal = document.getElementById('secretModalOverlay');
+  const secretModalClose = document.getElementById('secretModalClose');
+  const secretCloseBtn = document.getElementById('secretCloseBtn');
+
+  function openSecretLetter(e) {
+    if (e) e.preventDefault();
+    if (!secretModal) return;
+    secretModal.classList.add('active');
+    secretModal.setAttribute('aria-hidden', 'false');
+    showToast('Kamu menemukan surat rahasia... ✨');
+  }
+
+  function closeSecretLetter() {
+    if (!secretModal) return;
+    secretModal.classList.remove('active');
+    secretModal.setAttribute('aria-hidden', 'true');
+  }
+
+  if (secretStampBtn) {
+    secretStampBtn.addEventListener('click', openSecretLetter);
+  }
+
+  if (secretHeartBtn) {
+    secretHeartBtn.addEventListener('click', openSecretLetter);
+  }
+
+  if (secretModalClose) {
+    secretModalClose.addEventListener('click', closeSecretLetter);
+  }
+
+  if (secretCloseBtn) {
+    secretCloseBtn.addEventListener('click', closeSecretLetter);
+  }
+
+  if (secretModal) {
+    // Klik di latar belakang / overlay luar kartu untuk menutup
+    secretModal.addEventListener('click', (e) => {
+      if (e.target === secretModal) {
+        closeSecretLetter();
+      }
+    });
+  }
+
+  // Support tombol Escape untuk menutup
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && secretModal && secretModal.classList.contains('active')) {
+      closeSecretLetter();
+    }
+  });
 }
