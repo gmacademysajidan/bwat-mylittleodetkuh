@@ -51,6 +51,7 @@ window.addEventListener('DOMContentLoaded', () => {
   createAmbientParticles();
   createStars();
   initMusicPlayer();
+  initAlbumMusic();
   initEnvelope();
   initDots();
   initSlider();
@@ -138,6 +139,8 @@ function initMusicPlayer() {
     if (bgAudio.paused) {
       bgAudio.play().then(() => {
         player.classList.add('playing');
+        document.body.classList.add('is-music-playing');
+        syncCassettePlayState(true);
         audioCtxActive = true;
       }).catch(err => {
         console.log("Audio play blocked", err);
@@ -145,6 +148,8 @@ function initMusicPlayer() {
     } else {
       bgAudio.pause();
       player.classList.remove('playing');
+      document.body.classList.remove('is-music-playing');
+      syncCassettePlayState(false);
     }
   });
 
@@ -174,6 +179,8 @@ function tryPlayAudio() {
   if (bgAudio && bgAudio.paused && !audioCtxActive) {
     bgAudio.play().then(() => {
       if (player) player.classList.add('playing');
+      document.body.classList.add('is-music-playing');
+      syncCassettePlayState(true);
       audioCtxActive = true;
     }).catch(err => {
       console.log("Autoplay waiting for interaction:", err);
@@ -719,3 +726,238 @@ function initEasterEgg() {
     }
   });
 }
+
+// ============================================================
+//  ALBUM MUSIK (POJOK KIRI) & CASSETTE PLAYLIST SYSTEM
+// ============================================================
+const cassetteList = [
+  {
+    id: "lalu-biru",
+    title: "Lalu Biru x Panasea",
+    artist: "Eleanor Whisper ft. RumahSakit",
+    tag: "Kaset 01",
+    src: "[Tiktok Version] Lalu Biru x Panasea - Eleanor Whisper ft. RumahSakit (Lyrics Video) - anotherpiece.mp3"
+  },
+  {
+    id: "vierra-seandainya",
+    title: "Seandainya",
+    artist: "Vierra",
+    tag: "Kaset 02",
+    src: "Seandainya - Vierra (Official Audio Video).mp3"
+  },
+  {
+    id: "lagu-custom",
+    title: "Lagu Khusus (Folder)",
+    artist: "lagu.mp3 / music.mp3",
+    tag: "Kaset 03",
+    src: "lagu.mp3"
+  }
+];
+
+let currentCassetteId = "lalu-biru";
+
+function initAlbumMusic() {
+  const albumBtn = document.getElementById('musicAlbumBtn');
+  const albumOverlay = document.getElementById('musicAlbumOverlay');
+  const albumCloseBtn = document.getElementById('musicAlbumCloseBtn');
+  const cassetteGrid = document.getElementById('cassetteGrid');
+  const bgAudio = document.getElementById('bgAudio');
+
+  // Render cards kaset
+  if (cassetteGrid) {
+    cassetteGrid.innerHTML = '';
+    cassetteList.forEach((cassette) => {
+      const card = document.createElement('div');
+      card.className = `cassette-card ${cassette.id === currentCassetteId ? 'active' : ''}`;
+      card.dataset.id = cassette.id;
+      card.innerHTML = `
+        <div class="cassette-tape-graphic">
+          <div class="cassette-wheel"></div>
+          <div class="cassette-wheel"></div>
+        </div>
+        <div class="cassette-info">
+          <div class="cassette-tag">${cassette.tag}</div>
+          <div class="cassette-title">${cassette.title}</div>
+          <div class="cassette-artist">${cassette.artist}</div>
+        </div>
+        <div class="cassette-status">
+          <div class="cassette-play-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        playCassette(cassette.id);
+      });
+
+      cassetteGrid.appendChild(card);
+    });
+  }
+
+  // Buka / Tutup Drawer
+  function openAlbum() {
+    if (!albumOverlay) return;
+    albumOverlay.classList.add('active');
+    albumOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeAlbum() {
+    if (!albumOverlay) return;
+    albumOverlay.classList.remove('active');
+    albumOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  if (albumBtn) albumBtn.addEventListener('click', openAlbum);
+  if (albumCloseBtn) albumCloseBtn.addEventListener('click', closeAlbum);
+
+  if (albumOverlay) {
+    albumOverlay.addEventListener('click', (e) => {
+      if (e.target === albumOverlay) {
+        closeAlbum();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && albumOverlay && albumOverlay.classList.contains('active')) {
+      closeAlbum();
+    }
+  });
+
+  // Sinkronisasi status kaset awal dengan lagu yang sedang aktif
+  if (bgAudio) {
+    bgAudio.addEventListener('play', () => {
+      document.body.classList.add('is-music-playing');
+      syncCassettePlayState(true);
+    });
+    bgAudio.addEventListener('pause', () => {
+      document.body.classList.remove('is-music-playing');
+      syncCassettePlayState(false);
+    });
+  }
+}
+
+function playCassette(id) {
+  const cassette = cassetteList.find(c => c.id === id);
+  const bgAudio = document.getElementById('bgAudio');
+  const player = document.getElementById('musicPlayer');
+  const titleSpan = document.getElementById('musicTitle');
+
+  if (!cassette || !bgAudio) return;
+
+  currentCassetteId = id;
+  bgAudio.src = cassette.src;
+
+  bgAudio.play().then(() => {
+    if (player) player.classList.add('playing');
+    document.body.classList.add('is-music-playing');
+    audioCtxActive = true;
+    if (titleSpan) {
+      titleSpan.textContent = cassette.title.length > 16 ? cassette.title.substring(0, 14) + '...' : cassette.title;
+    }
+    syncCassettePlayState(true);
+    showToast(`Memutar: ${cassette.title}`);
+  }).catch(err => {
+    console.log("Audio play error:", err);
+    showToast(`Memutar kaset: ${cassette.title}`);
+  });
+
+  // Update styling kartu aktif
+  document.querySelectorAll('.cassette-card').forEach(card => {
+    const isThis = card.dataset.id === id;
+    card.classList.toggle('active', isThis);
+    card.classList.toggle('is-playing', isThis);
+  });
+}
+
+function syncCassettePlayState(isPlaying) {
+  document.querySelectorAll('.cassette-card').forEach(card => {
+    if (card.dataset.id === currentCassetteId) {
+      card.classList.toggle('is-playing', isPlaying);
+    } else {
+      card.classList.remove('is-playing');
+    }
+  });
+}
+
+// ============================================================
+//  REQUEST LAGU (OTOMATIS TERKIRIM LANGSUNG KE GMAIL JIDAN)
+// ============================================================
+async function handleSendSongRequest(e) {
+  e.preventDefault();
+  const titleInput = document.getElementById('reqSongTitle');
+  const noteInput = document.getElementById('reqSongNote');
+  const submitBtn = document.getElementById('reqSongBtn');
+  const successBox = document.getElementById('reqSuccessMsg');
+  const form = document.getElementById('reqMusicForm');
+
+  if (!titleInput) return;
+  const songTitle = titleInput.value.trim();
+  const songNote = noteInput ? noteInput.value.trim() : "";
+
+  if (!songTitle) return;
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span>Sedang Mengirim Request...</span>`;
+  }
+
+  // Backup simpan di browser
+  try {
+    const stored = JSON.parse(localStorage.getItem('jidan_req_lagu') || '[]');
+    stored.push({
+      date: new Date().toISOString(),
+      song: songTitle,
+      note: songNote
+    });
+    localStorage.setItem('jidan_req_lagu', JSON.stringify(stored));
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Kirim langsung ke Gmail Jidan via FormSubmit
+  try {
+    await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        _subject: "Request Lagu Baru (Dari Album Musik Website Surat)",
+        _template: "table",
+        _captcha: "false",
+        "Judul Lagu Request": songTitle,
+        "Catatan Tambahan": songNote || "-",
+        "Waktu Request": new Date().toLocaleString("id-ID")
+      })
+    });
+  } catch (err) {
+    console.log("Kirim request lagu latar belakang:", err);
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = `
+      <span>Kirim Request ke Jidan</span>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    `;
+  }
+
+  if (form) form.reset();
+  if (successBox) {
+    successBox.classList.add('show');
+    setTimeout(() => {
+      successBox.classList.remove('show');
+    }, 6000);
+  }
+
+  showToast(`Request lagu "${songTitle}" sudah terkirim ke Jidan!`);
+}
+

@@ -18,7 +18,84 @@
   <div class="particles-bg" id="particlesBg"></div>
   <div class="stars-bg" id="starsBg"></div>
 
-  <!-- Music Player Floating Widget -->
+  <!-- Album Music Corner Button (Pojok Kiri) -->
+  <button class="music-album-btn" id="musicAlbumBtn" title="Buka Album Musik & Request Lagu" aria-label="Buka Album Musik">
+    <div class="vinyl-disc-mini">
+      <div class="vinyl-groove"></div>
+      <div class="vinyl-center"></div>
+    </div>
+    <span class="album-btn-text">Album Musik</span>
+  </button>
+
+  <!-- Album Music Drawer / Modal (Pojok Kiri) -->
+  <div class="music-album-overlay" id="musicAlbumOverlay" aria-hidden="true">
+    <aside class="music-album-panel" id="musicAlbumPanel" role="dialog" aria-labelledby="albumTitle">
+      <div class="album-panel-header">
+        <div class="album-header-title">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+          <span id="albumTitle">Koleksi Kaset Musik</span>
+        </div>
+        <button class="album-close-btn" id="musicAlbumCloseBtn" type="button" aria-label="Tutup Album Musik">&times;</button>
+      </div>
+
+      <p class="album-desc">
+        Pilih kaset untuk mengganti lagu suasana surat ini, atau request lagu favoritmu di bawah:
+      </p>
+
+      <!-- Cassette Cards Grid -->
+      <div class="cassette-grid" id="cassetteGrid">
+        <!-- Cards generated dynamically via JavaScript -->
+      </div>
+
+      <!-- Request Lagu Form Section -->
+      <div class="req-music-box">
+        <div class="req-badge">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Mau Tambah Lagu Baru?</span>
+        </div>
+        <p class="req-hint">
+          Tulis judul lagu / penyanyi yang amu pengen dengerin di sini. Pesan langsung terkirim otomatis ke Gmail Jidan!
+        </p>
+
+        <form id="reqMusicForm" onsubmit="handleSendSongRequest(event)">
+          <div class="req-input-group">
+            <input
+              type="text"
+              id="reqSongTitle"
+              class="req-song-input"
+              placeholder="Contoh: Nadin Amizah - Rayuan Perempuan Gila"
+              required />
+            <textarea
+              id="reqSongNote"
+              class="req-song-textarea"
+              rows="2"
+              placeholder="Catatan / kenapa suka lagu ini (opsional)"></textarea>
+          </div>
+          <button type="submit" class="req-submit-btn" id="reqSongBtn">
+            <span>Kirim Request ke Jidan</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+
+        <div class="req-success-msg" id="reqSuccessMsg">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span>Request lagu berhasil dikirim ke Jidan! Nanti bakal ditambahkan yaa ✨</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Music Player Floating Widget (Pojok Kanan) -->
   <div class="music-player" id="musicPlayer">
     <button class="music-toggle-btn" id="musicToggleBtn" title="Putar / Jeda Musik" aria-label="Toggle Music">
       <svg class="music-icon icon-play" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
