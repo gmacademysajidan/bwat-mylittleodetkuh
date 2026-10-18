@@ -104,6 +104,20 @@ function createStars() {
 // ============================================================
 let audioCtxActive = false;
 
+function updateTitleFromSrc(src) {
+  const titleSpan = document.getElementById('musicTitle');
+  if (!titleSpan || !src) return;
+  try {
+    const rawName = decodeURIComponent(src.split('/').pop().split('?')[0]);
+    // Bersihkan ekstensi dan prefix umum
+    let cleanName = rawName.replace(/\.(mp3|wav|ogg|m4a)$/i, '');
+    if (cleanName.length > 18) {
+      cleanName = cleanName.substring(0, 16) + '...';
+    }
+    titleSpan.textContent = cleanName;
+  } catch (_) {}
+}
+
 function initMusicPlayer() {
   const bgAudio = document.getElementById('bgAudio');
   const toggleBtn = document.getElementById('musicToggleBtn');
@@ -112,6 +126,13 @@ function initMusicPlayer() {
   const titleSpan = document.getElementById('musicTitle');
 
   if (!bgAudio || !toggleBtn) return;
+
+  // Deteksi file lagu aktif yang berhasil dimuat browser
+  bgAudio.addEventListener('loadeddata', () => {
+    if (bgAudio.currentSrc) {
+      updateTitleFromSrc(bgAudio.currentSrc);
+    }
+  });
 
   toggleBtn.addEventListener('click', () => {
     if (bgAudio.paused) {
@@ -138,7 +159,7 @@ function initMusicPlayer() {
           player.classList.add('playing');
           audioCtxActive = true;
           if (titleSpan) {
-            titleSpan.textContent = file.name.length > 14 ? file.name.substring(0, 11) + '...' : file.name;
+            titleSpan.textContent = file.name.length > 16 ? file.name.substring(0, 14) + '...' : file.name;
           }
           showToast('Lagu pilihanmu berhasil diputar');
         }).catch(err => console.log(err));

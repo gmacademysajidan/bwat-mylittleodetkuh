@@ -35,9 +35,12 @@
       </label>
       <input type="file" id="musicUploadInput" accept="audio/*" style="display: none;" />
     </div>
-    <!-- Audio element with Lalu Biru x Panasea -->
+    <!-- Audio element: otomatis memutar lagu.mp3 / music.mp3 jika dimasukkan ke folder, atau fallback lagu bawaan -->
     <audio id="bgAudio" loop preload="auto">
+      <source src="lagu.mp3" type="audio/mpeg" />
+      <source src="music.mp3" type="audio/mpeg" />
       <source src="[Tiktok Version] Lalu Biru x Panasea - Eleanor Whisper ft. RumahSakit (Lyrics Video) - anotherpiece.mp3" type="audio/mpeg" />
+      <source src="Seandainya - Vierra (Official Audio Video).mp3" type="audio/mpeg" />
     </audio>
   </div>
 
