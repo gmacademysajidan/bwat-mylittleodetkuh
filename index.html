@@ -107,9 +107,17 @@
     </button>
     <div class="music-info">
       <span class="music-title" id="musicTitle">Lalu Biru x Panasea</span>
-      <label class="music-upload-label" for="musicUploadInput" title="Ganti lagu pilihanmu">
-        <span>Ganti Lagu</span>
-      </label>
+      <div class="music-sub-actions">
+        <button class="karaoke-trigger-btn" id="karaokeTriggerBtn" type="button" title="Buka Mode Karaoke & Lirik">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+          </svg>
+          <span>Lirik / Karaoke</span>
+        </button>
+        <label class="music-upload-label" for="musicUploadInput" title="Ganti lagu pilihanmu">
+          <span>Ganti Lagu</span>
+        </label>
+      </div>
       <input type="file" id="musicUploadInput" accept="audio/*" style="display: none;" />
     </div>
     <!-- Audio element: otomatis memutar lagu.mp3 / music.mp3 jika dimasukkan ke folder, atau fallback lagu bawaan -->
@@ -119,6 +127,95 @@
       <source src="[Tiktok Version] Lalu Biru x Panasea - Eleanor Whisper ft. RumahSakit (Lyrics Video) - anotherpiece.mp3" type="audio/mpeg" />
       <source src="Seandainya - Vierra (Official Audio Video).mp3" type="audio/mpeg" />
     </audio>
+  </div>
+
+  <!-- KARAOKE / LYRICS MODE MODAL WITH RISING MIC ANIMATION -->
+  <div class="karaoke-overlay" id="karaokeOverlay" aria-hidden="true">
+    <!-- Rising Microphone Stage Prop from Bottom -->
+    <div class="mic-stage-wrapper" id="micStageWrapper">
+      <div class="vintage-mic-prop">
+        <!-- Mic Head Grille -->
+        <div class="mic-grille">
+          <div class="mic-mesh-line"></div>
+          <div class="mic-mesh-line"></div>
+          <div class="mic-mesh-line"></div>
+        </div>
+        <!-- Mic Neck / Ring -->
+        <div class="mic-band"></div>
+        <!-- Mic Body -->
+        <div class="mic-body">
+          <div class="mic-switch"></div>
+        </div>
+        <!-- Mic Stand Stem -->
+        <div class="mic-pole"></div>
+        <!-- Sparkles / Aura glowing around mic -->
+        <div class="mic-glow-sparkle sp1">✦</div>
+        <div class="mic-glow-sparkle sp2">♪</div>
+        <div class="mic-glow-sparkle sp3">♫</div>
+        <div class="mic-glow-sparkle sp4">★</div>
+      </div>
+    </div>
+
+    <!-- Karaoke Stage Card -->
+    <div class="karaoke-card" role="dialog" aria-labelledby="karaokeTitle">
+      <div class="karaoke-header">
+        <div class="karaoke-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+          </svg>
+          <span>Mode Karaoke & Lirik</span>
+        </div>
+        <button class="karaoke-close-btn" id="karaokeCloseBtn" type="button" aria-label="Tutup Mode Karaoke">&times;</button>
+      </div>
+
+      <!-- Now Playing Song Info In Karaoke -->
+      <div class="karaoke-song-info">
+        <div class="karaoke-song-title" id="karaokeSongTitle">Lalu Biru x Panasea</div>
+        <div class="karaoke-song-artist" id="karaokeSongArtist">Eleanor Whisper ft. RumahSakit</div>
+      </div>
+
+      <!-- Karaoke Progress Bar & Timer -->
+      <div class="karaoke-playback-bar">
+        <span class="karaoke-time" id="karaokeCurrentTime">00:00</span>
+        <div class="karaoke-timeline-track" id="karaokeTimelineTrack">
+          <div class="karaoke-timeline-fill" id="karaokeTimelineFill"></div>
+        </div>
+        <span class="karaoke-time" id="karaokeDuration">00:00</span>
+      </div>
+
+      <!-- Live Synced Lyrics Container -->
+      <div class="karaoke-lyrics-window" id="karaokeLyricsWindow">
+        <div class="lyrics-scroll-container" id="lyricsScrollContainer">
+          <!-- Lyrics lines dynamically populated here with synchronized timestamps -->
+        </div>
+      </div>
+
+      <!-- Karaoke Footer Controls -->
+      <div class="karaoke-controls">
+        <button class="karaoke-ctrl-btn" id="karaokePrevBtn" title="Rewind 5 Detik">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
+          </svg>
+          <span>-5s</span>
+        </button>
+
+        <button class="karaoke-ctrl-btn btn-karaoke-play" id="karaokePlayBtn" title="Play / Pause">
+          <svg class="k-icon-play" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <svg class="k-icon-pause" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="display: none;">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+          </svg>
+        </button>
+
+        <button class="karaoke-ctrl-btn" id="karaokeNextBtn" title="Forward 5 Detik">
+          <span>+5s</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Envelope Scene (Initial Page) -->

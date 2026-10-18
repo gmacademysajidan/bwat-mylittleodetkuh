@@ -52,6 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
   createStars();
   initMusicPlayer();
   initAlbumMusic();
+  initKaraokeMode();
   initEnvelope();
   initDots();
   initSlider();
@@ -865,6 +866,12 @@ function playCassette(id) {
     showToast(`Memutar kaset: ${cassette.title}`);
   });
 
+  // Jika overlay karaoke sedang aktif, refresh lirik langsung
+  const karaokeOverlay = document.getElementById('karaokeOverlay');
+  if (karaokeOverlay && karaokeOverlay.classList.contains('active')) {
+    loadActiveLyrics();
+  }
+
   // Update styling kartu aktif
   document.querySelectorAll('.cassette-card').forEach(card => {
     const isThis = card.dataset.id === id;
@@ -959,5 +966,300 @@ async function handleSendSongRequest(e) {
   }
 
   showToast(`Request lagu "${songTitle}" sudah terkirim ke Jidan!`);
+}
+
+// ============================================================
+//  SYNCHRONIZED KARAOKE & LYRICS SYSTEM (WITH RISING MIC)
+// ============================================================
+const lyricsDatabase = {
+  "lalu-biru": {
+    title: "Lalu Biru x Panasea",
+    artist: "Eleanor Whisper ft. RumahSakit",
+    lines: [
+      { time: 0, text: "♪ (Intro Melodi Lalu Biru x Panasea) ♪" },
+      { time: 9, text: "Terang selalu dirindukan gelap..." },
+      { time: 18, text: "Tenang selalu dirindukan resah..." },
+      { time: 27, text: "Dan berlalu wajahmu temani malamku yang penuh rindu" },
+      { time: 38, text: "Bisikan tenang terdengar di malam panjangku sayang..." },
+      { time: 48, text: "Begitu juga bila... jauh engkau berada..." },
+      { time: 58, text: "Bila tubuhku membiru apakah kau datang sayang?" },
+      { time: 69, text: "Bulan pun datang tuk merayu kupastikan tak tergantikan" },
+      { time: 80, text: "Takkan ku berubah... walau tak bersama..." },
+      { time: 91, text: "Kita tak pernah terpisah melintas ruang dan waktu" },
+      { time: 102, text: "Selamanya..." },
+      { time: 110, text: "Malamku tak bercahaya..." },
+      { time: 119, text: "Mimpiku niscaya tak indah..." },
+      { time: 129, text: "Tak punya arti terasa binasa..." },
+      { time: 139, text: "Berlalu lagu sendu, nyanyikan nada indah..." },
+      { time: 150, text: "Dimana dikau (yang tercinta) yang tercinta..." },
+      { time: 161, text: "Apakah sang malam mendengarkan kata yang ku ucap?" },
+      { time: 172, text: "Walau tak terucap akan terus terdengar" },
+      { time: 183, text: "Nyanyian dalam hatimu... dalam angan dan nafasku" },
+      { time: 194, text: "Selamanya..." },
+      { time: 204, text: "Alam takkan menang... buat tak berdaya..." },
+      { time: 216, text: "Melangkah senantiasa... kau panasea bagiku selamanya ✨" }
+    ]
+  },
+  "vierra-seandainya": {
+    title: "Seandainya",
+    artist: "Vierra",
+    lines: [
+      { time: 0, text: "♪ (Intro Piano Seandainya - Vierra) ♪" },
+      { time: 14, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
+      { time: 27, text: "Melukai kenangan yang t'lah kita lalui..." },
+      { time: 41, text: "Yang tersisa hanya aku sendiri di sini..." },
+      { time: 54, text: "Kau akan terbang jauh menembus awan" },
+      { time: 66, text: "Memulai kisah baru tanpa diriku..." },
+      { time: 80, text: "Seandainya kau tahu ku tak ingin kau pergi 🎤" },
+      { time: 92, text: "Meninggalkanku sendiri bersama bayanganku..." },
+      { time: 105, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
+      { time: 118, text: "Jangan kau lupakan kenangan kita s'lama ini..." },
+      { time: 132, text: "♪ (Melodi Indah) ♪" },
+      { time: 146, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
+      { time: 158, text: "Melukai kenangan yang t'lah kita lalui..." },
+      { time: 171, text: "Seandainya kau tahu ku tak ingin kau pergi..." },
+      { time: 184, text: "Meninggalkanku sendiri bersama bayanganku..." },
+      { time: 197, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
+      { time: 210, text: "Jangan kau lupakan kenangan kita s'lama ini... 💗" }
+    ]
+  },
+  "default": {
+    title: "Lagu Pilihan",
+    artist: "Audio Player",
+    lines: [
+      { time: 0, text: "♪ Sedang memutar lagu pilihanmu ♪" },
+      { time: 10, text: "Bernyanyilah dan nikmati setiap alunannya..." },
+      { time: 30, text: "Kapan pun kamu butuh teman cerita atau mabar..." },
+      { time: 60, text: "Jidan selalu siap sedia nemenin kamu 😋🗿" },
+      { time: 100, text: "♪ Nikmati lagunya yaa ♪" }
+    ]
+  }
+};
+
+let activeLyricIndex = -1;
+
+function initKaraokeMode() {
+  const triggerBtn = document.getElementById('karaokeTriggerBtn');
+  const overlay = document.getElementById('karaokeOverlay');
+  const closeBtn = document.getElementById('karaokeCloseBtn');
+  const bgAudio = document.getElementById('bgAudio');
+  const playBtn = document.getElementById('karaokePlayBtn');
+  const prevBtn = document.getElementById('karaokePrevBtn');
+  const nextBtn = document.getElementById('karaokeNextBtn');
+  const track = document.getElementById('karaokeTimelineTrack');
+
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', openKaraoke);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeKaraoke);
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeKaraoke();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && overlay.classList.contains('active')) {
+      closeKaraoke();
+    }
+  });
+
+  // Sinkronisasi tombol play di dalam karaoke
+  if (playBtn && bgAudio) {
+    playBtn.addEventListener('click', () => {
+      const player = document.getElementById('musicPlayer');
+      if (bgAudio.paused) {
+        bgAudio.play().then(() => {
+          if (player) player.classList.add('playing');
+          document.body.classList.add('is-music-playing');
+          syncKaraokePlayIcon(true);
+          syncCassettePlayState(true);
+        }).catch(err => console.log(err));
+      } else {
+        bgAudio.pause();
+        if (player) player.classList.remove('playing');
+        document.body.classList.remove('is-music-playing');
+        syncKaraokePlayIcon(false);
+        syncCassettePlayState(false);
+      }
+    });
+  }
+
+  // Seek mundur 5 detik
+  if (prevBtn && bgAudio) {
+    prevBtn.addEventListener('click', () => {
+      bgAudio.currentTime = Math.max(0, bgAudio.currentTime - 5);
+      showToast('Mundur 5 detik');
+    });
+  }
+
+  // Seek maju 5 detik
+  if (nextBtn && bgAudio) {
+    nextBtn.addEventListener('click', () => {
+      bgAudio.currentTime = Math.min(bgAudio.duration || 9999, bgAudio.currentTime + 5);
+      showToast('Maju 5 detik');
+    });
+  }
+
+  // Klik timeline untuk seek lagu langsung
+  if (track && bgAudio) {
+    track.addEventListener('click', (e) => {
+      const rect = track.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      if (bgAudio.duration) {
+        bgAudio.currentTime = ratio * bgAudio.duration;
+      }
+    });
+  }
+
+  // Timeupdate listener untuk sinkronisasi lirik detik demi detik
+  if (bgAudio) {
+    bgAudio.addEventListener('timeupdate', syncKaraokeProgress);
+    bgAudio.addEventListener('play', () => syncKaraokePlayIcon(true));
+    bgAudio.addEventListener('pause', () => syncKaraokePlayIcon(false));
+  }
+}
+
+function openKaraoke() {
+  const overlay = document.getElementById('karaokeOverlay');
+  const bgAudio = document.getElementById('bgAudio');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  // Mulai audio jika belum berbunyi
+  if (bgAudio && bgAudio.paused) {
+    bgAudio.play().then(() => {
+      const player = document.getElementById('musicPlayer');
+      if (player) player.classList.add('playing');
+      document.body.classList.add('is-music-playing');
+      syncCassettePlayState(true);
+    }).catch(err => console.log(err));
+  }
+
+  loadActiveLyrics();
+  syncKaraokePlayIcon(bgAudio ? !bgAudio.paused : false);
+  showToast('Selamat bernyanyi karoke! 🎤✨');
+}
+
+function closeKaraoke() {
+  const overlay = document.getElementById('karaokeOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function syncKaraokePlayIcon(isPlaying) {
+  const playIcon = document.querySelector('.k-icon-play');
+  const pauseIcon = document.querySelector('.k-icon-pause');
+  if (playIcon && pauseIcon) {
+    playIcon.style.display = isPlaying ? 'none' : 'block';
+    pauseIcon.style.display = isPlaying ? 'block' : 'none';
+  }
+}
+
+function formatTime(seconds) {
+  if (isNaN(seconds) || seconds < 0) return "00:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function loadActiveLyrics() {
+  const songTitleEl = document.getElementById('karaokeSongTitle');
+  const songArtistEl = document.getElementById('karaokeSongArtist');
+  const container = document.getElementById('lyricsScrollContainer');
+  const bgAudio = document.getElementById('bgAudio');
+
+  // Tentukan lirik mana yang cocok dengan kaset atau file audio aktif
+  let key = currentCassetteId;
+  if (!lyricsDatabase[key]) {
+    key = "default";
+  }
+
+  const data = lyricsDatabase[key];
+  if (songTitleEl) songTitleEl.textContent = data.title;
+  if (songArtistEl) songArtistEl.textContent = data.artist;
+
+  if (!container) return;
+  container.innerHTML = '';
+  activeLyricIndex = -1;
+
+  data.lines.forEach((item, index) => {
+    const p = document.createElement('p');
+    p.className = 'lyric-line';
+    p.dataset.time = item.time;
+    p.dataset.index = index;
+    p.textContent = item.text;
+
+    // Klik baris lirik untuk langsung lompat ke detik tersebut!
+    p.addEventListener('click', () => {
+      if (bgAudio) {
+        bgAudio.currentTime = item.time;
+        if (bgAudio.paused) bgAudio.play().catch(_=>{});
+      }
+    });
+
+    container.appendChild(p);
+  });
+}
+
+function syncKaraokeProgress() {
+  const bgAudio = document.getElementById('bgAudio');
+  const timeCurrent = document.getElementById('karaokeCurrentTime');
+  const timeDuration = document.getElementById('karaokeDuration');
+  const fill = document.getElementById('karaokeTimelineFill');
+  const scrollWindow = document.getElementById('karaokeLyricsWindow');
+
+  if (!bgAudio) return;
+
+  const cur = bgAudio.currentTime || 0;
+  const dur = bgAudio.duration || 0;
+
+  if (timeCurrent) timeCurrent.textContent = formatTime(cur);
+  if (timeDuration && dur > 0) timeDuration.textContent = formatTime(dur);
+
+  if (fill && dur > 0) {
+    fill.style.width = `${(cur / dur) * 100}%`;
+  }
+
+  // Sinkronkan highlight baris lirik
+  const lines = document.querySelectorAll('.lyric-line');
+  if (!lines || lines.length === 0) return;
+
+  let currentLineIndex = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const lineTime = parseFloat(lines[i].dataset.time);
+    if (cur >= lineTime) {
+      currentLineIndex = i;
+    } else {
+      break;
+    }
+  }
+
+  if (currentLineIndex !== activeLyricIndex && currentLineIndex >= 0) {
+    activeLyricIndex = currentLineIndex;
+
+    lines.forEach((line, idx) => {
+      line.classList.toggle('active', idx === currentLineIndex);
+    });
+
+    // Auto-scroll ke tengah jendela lirik
+    const activeEl = lines[currentLineIndex];
+    if (activeEl && scrollWindow) {
+      const elOffsetTop = activeEl.offsetTop;
+      const windowHeight = scrollWindow.clientHeight;
+      scrollWindow.scrollTo({
+        top: elOffsetTop - (windowHeight / 2) + (activeEl.clientHeight / 2),
+        behavior: 'smooth'
+      });
+    }
+  }
 }
 
