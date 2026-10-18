@@ -976,51 +976,54 @@ const lyricsDatabase = {
     title: "Lalu Biru x Panasea",
     artist: "Eleanor Whisper ft. RumahSakit",
     lines: [
-      { time: 0, text: "♪ (Intro Melodi Lalu Biru x Panasea) ♪" },
-      { time: 9, text: "Terang selalu dirindukan gelap..." },
-      { time: 18, text: "Tenang selalu dirindukan resah..." },
-      { time: 27, text: "Dan berlalu wajahmu temani malamku yang penuh rindu" },
-      { time: 38, text: "Bisikan tenang terdengar di malam panjangku sayang..." },
-      { time: 48, text: "Begitu juga bila... jauh engkau berada..." },
-      { time: 58, text: "Bila tubuhku membiru apakah kau datang sayang?" },
-      { time: 69, text: "Bulan pun datang tuk merayu kupastikan tak tergantikan" },
-      { time: 80, text: "Takkan ku berubah... walau tak bersama..." },
-      { time: 91, text: "Kita tak pernah terpisah melintas ruang dan waktu" },
-      { time: 102, text: "Selamanya..." },
-      { time: 110, text: "Malamku tak bercahaya..." },
-      { time: 119, text: "Mimpiku niscaya tak indah..." },
-      { time: 129, text: "Tak punya arti terasa binasa..." },
-      { time: 139, text: "Berlalu lagu sendu, nyanyikan nada indah..." },
-      { time: 150, text: "Dimana dikau (yang tercinta) yang tercinta..." },
-      { time: 161, text: "Apakah sang malam mendengarkan kata yang ku ucap?" },
-      { time: 172, text: "Walau tak terucap akan terus terdengar" },
-      { time: 183, text: "Nyanyian dalam hatimu... dalam angan dan nafasku" },
-      { time: 194, text: "Selamanya..." },
-      { time: 204, text: "Alam takkan menang... buat tak berdaya..." },
-      { time: 216, text: "Melangkah senantiasa... kau panasea bagiku selamanya ✨" }
+      { time: 0, text: "♪ (Intro Melodi - Lalu Biru x Panasea) ♪" },
+      { time: 14, text: "Terang selalu dirindukan gelap..." },
+      { time: 22, text: "Tenang selalu dirindukan resah..." },
+      { time: 31, text: "Dan berlalu wajahmu temani malamku yang penuh rindu" },
+      { time: 42, text: "Bisikan tenang terdengar di malam panjangku, sayang..." },
+      { time: 54, text: "Begitu juga bila... jauh engkau berada..." },
+      { time: 66, text: "Bila tubuhku membiru, apakah kau datang, sayang?" },
+      { time: 79, text: "Bulan pun datang ’tuk merayu... kupastikan tak tergantikan" },
+      { time: 92, text: "Takkan ku berubah... walau tak bersama" },
+      { time: 104, text: "Kita tak pernah terpisah... melintas ruang dan waktu" },
+      { time: 116, text: "Selamanya..." },
+      { time: 125, text: "Malamku tak bercahaya..." },
+      { time: 135, text: "Mimpiku niscaya tak indah..." },
+      { time: 145, text: "Tak punya arti, terasa binasa..." },
+      { time: 156, text: "Berlalu lagu sendu, nyanyikan nada indah..." },
+      { time: 167, text: "Di mana dikau (yang tercinta) yang tercinta..." },
+      { time: 179, text: "Apakah sang malam mendengarkan kata yang kuucap?" },
+      { time: 191, text: "Walau tak terucap, akan terus terdengar" },
+      { time: 203, text: "Nyanyian dalam hatimu... dalam angan dan nafasku" },
+      { time: 215, text: "Selamanya..." },
+      { time: 226, text: "Alam takkan menang... buat tak berdaya..." },
+      { time: 238, text: "Melangkah senantiasa... kau panasea bagiku selamanya ✨" }
     ]
   },
   "vierra-seandainya": {
     title: "Seandainya",
     artist: "Vierra",
     lines: [
-      { time: 0, text: "♪ (Intro Piano Seandainya - Vierra) ♪" },
-      { time: 14, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
-      { time: 27, text: "Melukai kenangan yang t'lah kita lalui..." },
-      { time: 41, text: "Yang tersisa hanya aku sendiri di sini..." },
-      { time: 54, text: "Kau akan terbang jauh menembus awan" },
-      { time: 66, text: "Memulai kisah baru tanpa diriku..." },
-      { time: 80, text: "Seandainya kau tahu ku tak ingin kau pergi 🎤" },
-      { time: 92, text: "Meninggalkanku sendiri bersama bayanganku..." },
-      { time: 105, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
-      { time: 118, text: "Jangan kau lupakan kenangan kita s'lama ini..." },
-      { time: 132, text: "♪ (Melodi Indah) ♪" },
-      { time: 146, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
-      { time: 158, text: "Melukai kenangan yang t'lah kita lalui..." },
-      { time: 171, text: "Seandainya kau tahu ku tak ingin kau pergi..." },
-      { time: 184, text: "Meninggalkanku sendiri bersama bayanganku..." },
-      { time: 197, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
-      { time: 210, text: "Jangan kau lupakan kenangan kita s'lama ini... 💗" }
+      { time: 0, text: "♪ (Intro Piano - Kevin Aprilio) ♪" },
+      { time: 15, text: "♪ (Ah-ah-ah...) ♪" },
+      { time: 31, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
+      { time: 44, text: "Melukai kenangan yang t'lah kita lalui..." },
+      { time: 57, text: "Yang tersisa hanya aku sendiri di sini..." },
+      { time: 69, text: "Kau akan terbang jauh menembus awan" },
+      { time: 82, text: "Memulai kisah baru tanpa diriku..." },
+      { time: 95, text: "Seandainya kau tahu ku tak ingin kau pergi 🎤" },
+      { time: 108, text: "Meninggalkanku sendiri bersama bayanganku..." },
+      { time: 121, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
+      { time: 134, text: "Jangan kau lupakan kenangan kita s'lama ini..." },
+      { time: 147, text: "♪ (Interlude Melodi Piano) ♪" },
+      { time: 160, text: "Kelak kau 'kan menjalani hidupmu sendiri..." },
+      { time: 173, text: "Melukai kenangan yang t'lah kita lalui..." },
+      { time: 186, text: "Kau akan terbang jauh menembus awan..." },
+      { time: 198, text: "Memulai kisah baru tanpa diriku..." },
+      { time: 211, text: "Seandainya kau tahu ku tak ingin kau pergi..." },
+      { time: 224, text: "Meninggalkanku sendiri bersama bayanganku..." },
+      { time: 237, text: "Seandainya kau tahu aku 'kan selalu cinta..." },
+      { time: 250, text: "Jangan kau lupakan kenangan kita s'lama ini... 💗" }
     ]
   },
   "default": {
@@ -1037,6 +1040,8 @@ const lyricsDatabase = {
 };
 
 let activeLyricIndex = -1;
+let isFullTextMode = false;
+
 
 function initKaraokeMode() {
   const triggerBtn = document.getElementById('karaokeTriggerBtn');
@@ -1059,6 +1064,20 @@ function initKaraokeMode() {
   if (overlay) {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) closeKaraoke();
+    });
+  }
+
+  const modeToggle = document.getElementById('lyricsModeToggle');
+  if (modeToggle) {
+    modeToggle.addEventListener('click', () => {
+      isFullTextMode = !isFullTextMode;
+      modeToggle.textContent = isFullTextMode ? "Mode Karaoke (Auto)" : "Mode Teks Penuh";
+      const scrollWindow = document.getElementById('karaokeLyricsWindow');
+      if (scrollWindow) {
+        scrollWindow.style.maskImage = isFullTextMode ? 'none' : '';
+        scrollWindow.style.webkitMaskImage = isFullTextMode ? 'none' : '';
+      }
+      showToast(isFullTextMode ? "Menampilkan seluruh teks lirik" : "Kembali ke mode karaoke sinkron");
     });
   }
 
@@ -1250,9 +1269,9 @@ function syncKaraokeProgress() {
       line.classList.toggle('active', idx === currentLineIndex);
     });
 
-    // Auto-scroll ke tengah jendela lirik
+    // Auto-scroll ke tengah jendela lirik (jika bukan mode teks penuh)
     const activeEl = lines[currentLineIndex];
-    if (activeEl && scrollWindow) {
+    if (activeEl && scrollWindow && !isFullTextMode) {
       const elOffsetTop = activeEl.offsetTop;
       const windowHeight = scrollWindow.clientHeight;
       scrollWindow.scrollTo({

@@ -2154,6 +2154,33 @@ body.is-music-playing .vinyl-disc-mini {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  gap: 10px;
+}
+
+.karaoke-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.karaoke-mode-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 168, 67, 0.35);
+  border-radius: 14px;
+  padding: 3px 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.karaoke-mode-toggle-btn:hover {
+  background: rgba(212, 168, 67, 0.25);
+  color: #fff;
+  border-color: var(--gold);
 }
 
 .karaoke-badge {
